@@ -10,6 +10,8 @@ config :management, Management.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+config :joken, default_signer: "06006a63e277135968a170773825440be0715c66840bec244e68652dcc9557e8"
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #

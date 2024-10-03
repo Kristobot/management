@@ -8,7 +8,7 @@ defmodule Management.Profile.Person do
     field :address, :string
     field :birth_date, :date
 
-    belongs_to :person, Management.Profile.Person
+    belongs_to :user, Management.Account.User
     belongs_to :district, Management.Profile.District
     timestamps(type: :utc_datetime)
   end
@@ -16,7 +16,9 @@ defmodule Management.Profile.Person do
   @doc false
   def changeset(person, attrs) do
     person
-    |> cast(attrs, [:name, :last_name])
-    |> validate_required([:name, :last_name])
+    |> cast(attrs, [:name, :last_name, :address, :birth_date, :district_id, :user_id])
+    |> validate_required([:name, :last_name, :address, :birth_date, :district_id])
+    |> cast_assoc(:user)
+    |> cast_assoc(:district)
   end
 end

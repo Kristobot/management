@@ -11,10 +11,12 @@
 # and so on) as they will fail if something goes wrong.
 
 
+alias Management.Profile.District
 alias Management.Repo
-alias Management.Account
 alias Management.Account.Role
-alias Management.Account.User
+
 
 Repo.insert(%Role{name: "admin"})
 Repo.insert(%Role{name: "user"})
+
+Repo.insert(%District{name: "Chorrillos"})

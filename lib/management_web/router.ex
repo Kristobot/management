@@ -5,9 +5,25 @@ defmodule ManagementWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug ManagementWeb.Authentication
+  end
+
   scope "/api", ManagementWeb do
     pipe_through :api
+    post "/users", UserController, :create
+    get "/users", UserController, :index
+    get "/users/:id", UserController, :show
+    post "/users/login", SessionController, :authenticate
   end
+
+  scope "/api", ManagementWeb do
+    pipe_through [:api, :auth]
+
+    get "/profile", UserController, :profile
+    post "/profile", PersonController, :create
+  end
+
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:management, :dev_routes) do

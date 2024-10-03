@@ -18,11 +18,13 @@ defmodule Management.Account.User do
     user
     |> cast(attrs, [:username, :email, :password])
     |> validate_required([:username, :email, :password])
+    |> cast_assoc(:roles)
   end
 
   def update_user(user, attrs) do
     user
     |> cast(attrs, [:username, :email])
     |> validate_required([:username, :email])
+    |> cast_assoc(:roles)
   end
 end
