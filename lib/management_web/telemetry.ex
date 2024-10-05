@@ -11,10 +11,14 @@ defmodule ManagementWeb.Telemetry do
     children = [
       # Telemetry poller will execute the given period measurements
       # every 10_000ms. Learn more here: https://hexdocs.pm/telemetry_metrics
-      {:telemetry_poller, measurements: periodic_measurements(), period: 10_000}
+      {:telemetry_poller, measurements: periodic_measurements(), period: 10_000},
       # Add reporters as children of your supervision tree.
-      # {Telemetry.Metrics.ConsoleReporter, metrics: metrics()}
+      #{Telemetry.Metrics.ConsoleReporter, metrics: metrics()}
     ]
+
+    :telemetry.attach("user-created", [:management, :user, :created], &Management.EventHandler.handle_event/4, [])
+    :telemetry.attach("user-failure", [:management, :user, :failure], &Management.EventHandler.handle_event/4, [])
+    :telemetry.attach("query-queue-time", [:management, :query, :queue_time], &Management.EventHandler.handle_event/4, [])
 
     Supervisor.init(children, strategy: :one_for_one)
   end
@@ -73,6 +77,12 @@ defmodule ManagementWeb.Telemetry do
         description:
           "The time the connection spent waiting before being checked out for the query"
       ),
+
+      # Other Metrics
+      counter([:management, :user, :count], event_name: [:management ,:user, :created],measurement: :count ,description: "User created"),
+      counter([:management, :user, :failure], event_name: [:management ,:user, :failure], measurement: :count, description: "User failed to create"),
+
+      summary([:management, :query, :queue_time], event_name: [:management, :query, :queue_time], unit: {:native, :millisecond}, description: "Query queue time", reporter_options: [buckets: [0, 10, 100, 500, 1000, 5000]], measurement: :duration),
 
       # VM Metrics
       summary("vm.memory.total", unit: {:byte, :kilobyte}),

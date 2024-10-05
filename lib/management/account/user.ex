@@ -18,6 +18,7 @@ defmodule Management.Account.User do
     user
     |> cast(attrs, [:username, :email, :password])
     |> validate_required([:username, :email, :password])
+    |> unique_constraint(:email, name: :users_email_index)
     |> cast_assoc(:roles)
   end
 

@@ -8,5 +8,7 @@ defmodule Management.Repo.Migrations.CreateUsers do
       add :password, :string
       timestamps(type: :utc_datetime)
     end
+
+    create unique_index(:users, [:email])
   end
 end

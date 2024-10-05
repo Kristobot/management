@@ -1,4 +1,5 @@
 defmodule ManagementWeb.UserJSON do
+  alias ManagementWeb.RoleJSON
   alias Management.Account.User
 
   def show(%{user: user}) do
@@ -15,7 +16,16 @@ defmodule ManagementWeb.UserJSON do
     %{
       id: user.id,
       username: user.username,
-      email: user.email
+      email: user.email,
+    }
+  end
+
+  def error(%{error: errors}) do
+    map = errors
+    |> Enum.map(fn {k, {error,_}} -> {k ,[error]} end)
+    |> Enum.into(%{})
+    %{
+      errors: map
     }
   end
 
